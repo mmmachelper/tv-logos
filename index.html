@@ -521,7 +521,7 @@
         <div class="header-content">
             <div class="header-top">
                 <div class="logo">
-                    <div class="logo-icon">📺</div>
+                    <div class="logo-icon">TV</div>
                     <span class="logo-text">TV Logos</span>
                 </div>
                 <div class="stats">
@@ -537,7 +537,7 @@
             </div>
 
             <div class="search-container">
-                <span class="search-icon">🔍</span>
+                <span class="search-icon"></span>
                 <input type="text" class="search-input" id="searchInput"
                     placeholder="Search logos... (e.g., ESPN, BBC, CNN)" autocomplete="off">
                 <button class="search-clear" id="searchClear">Clear</button>
@@ -548,10 +548,10 @@
                     All <span class="filter-count" id="countAll">-</span>
                 </button>
                 <button class="filter-btn" data-category="countries">
-                    🌍 Countries <span class="filter-count" id="countCountries">-</span>
+                    Countries <span class="filter-count" id="countCountries">-</span>
                 </button>
                 <button class="filter-btn" data-category="misc">
-                    ⭐ Misc <span class="filter-count" id="countMisc">-</span>
+                    Misc <span class="filter-count" id="countMisc">-</span>
                 </button>
                 <select class="country-select" id="countrySelect">
                     <option value="">All Countries</option>
@@ -580,12 +580,13 @@
     </main>
 
     <footer class="footer">
-        <p>TV Logos Collection • <a href="https://github.com/AltNyx/tv-logos" target="_blank">GitHub Repository</a></p>
+        <p>Created By <a href="https://www.facebook.com/profile.php?id=100004169110021" target="_blank">NANDA WIN NYUNT
+                THEIN</a></p>
         <p>Click on any logo to copy its direct URL to clipboard</p>
     </footer>
 
     <div class="toast" id="toast">
-        ✓ Link copied to clipboard!
+        Link copied to clipboard!
     </div>
 
     <script>
@@ -753,7 +754,7 @@
                 <div class="logo-name">${logo.name}</div>
                 <div class="logo-category">${formatCountryName(logo.subcategory) || logo.category}</div>
                 <div class="copy-overlay">
-                    <span class="copy-icon">📋</span>
+                    <span class="copy-icon">Copy</span>
                     <span class="copy-text">Click to copy URL</span>
                 </div>
             `;
@@ -776,7 +777,7 @@
                 // Show overlay feedback
                 const overlay = card.querySelector('.copy-overlay');
                 overlay.classList.add('copied-overlay');
-                overlay.innerHTML = '<span class="copy-icon">✓</span><span class="copy-text">Copied!</span>';
+                overlay.innerHTML = '<span class="copy-icon">Done</span><span class="copy-text">Copied!</span>';
 
                 // Show toast
                 showToast();
@@ -784,7 +785,7 @@
                 // Reset after delay
                 setTimeout(() => {
                     overlay.classList.remove('copied-overlay');
-                    overlay.innerHTML = '<span class="copy-icon">📋</span><span class="copy-text">Click to copy URL</span>';
+                    overlay.innerHTML = '<span class="copy-icon">Copy</span><span class="copy-text">Click to copy URL</span>';
                 }, 1500);
             } catch (err) {
                 console.error('Failed to copy:', err);
