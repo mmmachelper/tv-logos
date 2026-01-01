@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Logos Gallery - Search & Copy</title>
+    <meta name="description"
+        content="Search and find TV channel logos from around the world. Click to copy direct links.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-card-hover: #22222e;
+            --accent-primary: #6366f1;
+            --accent-secondary: #818cf8;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border-color: #27272a;
+            --success: #22c55e;
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-2: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background: rgba(18, 18, 26, 0.9);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-secondary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Search */
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.25rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-secondary);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        .search-clear.visible {
+            display: block;
+        }
+
+        .search-clear:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .filter-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.125rem 0.5rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+        }
+
+        /* Country Select */
+        .country-select {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-family: inherit;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .country-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .results-count {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .results-count span {
+            color: var(--accent-secondary);
+            font-weight: 600;
+        }
+
+        /* Grid */
+        .logos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .logo-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--accent-glow);
+        }
+
+        .logo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-card:hover::before {
+            opacity: 1;
+        }
+
+        .logo-image-container {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+
+        .logo-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-name {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+        .logo-category {
+            font-size: 0.625rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .copy-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(99, 102, 241, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            border-radius: 16px;
+        }
+
+        .logo-card:hover .copy-overlay {
+            opacity: 1;
+        }
+
+        .copy-icon {
+            font-size: 1.5rem;
+        }
+
+        .copy-text {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .copied-overlay {
+            background: var(--success) !important;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            gap: 1rem;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-description {
+            color: var(--text-secondary);
+        }
+
+        /* Load More */
+        .load-more {
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .load-more-btn {
+            padding: 1rem 2rem;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 100px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            font-weight: 500;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .logo-card {
+                padding: 1rem;
+            }
+
+            .main {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <div class="logo">
+                    <div class="logo-icon">📺</div>
+                    <span class="logo-text">TV Logos</span>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalLogos">-</div>
+                        <div class="stat-label">Total Logos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalCountries">-</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput"
+                    placeholder="Search logos... (e.g., ESPN, BBC, CNN)" autocomplete="off">
+                <button class="search-clear" id="searchClear">Clear</button>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" data-category="all">
+                    All <span class="filter-count" id="countAll">-</span>
+                </button>
+                <button class="filter-btn" data-category="countries">
+                    🌍 Countries <span class="filter-count" id="countCountries">-</span>
+                </button>
+                <button class="filter-btn" data-category="misc">
+                    ⭐ Misc <span class="filter-count" id="countMisc">-</span>
+                </button>
+                <select class="country-select" id="countrySelect">
+                    <option value="">All Countries</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="results-info">
+            <div class="results-count">
+                Showing <span id="showingCount">0</span> of <span id="filteredCount">0</span> logos
+            </div>
+        </div>
+
+        <div id="logosContainer">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Loading logos...</div>
+            </div>
+        </div>
+
+        <div class="load-more" id="loadMoreContainer" style="display: none;">
+            <button class="load-more-btn" id="loadMoreBtn">Load More</button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>TV Logos Collection • <a href="https://github.com/AltNyx/tv-logos" target="_blank">GitHub Repository</a></p>
+        <p>Click on any logo to copy its direct URL to clipboard</p>
+    </footer>
+
+    <div class="toast" id="toast">
+        ✓ Link copied to clipboard!
+    </div>
+
+    <script>
+        // Configuration - Change this for deployment
+        const BASE_URL = 'https://logo.ftube.net/';
+
+        // State
+        let allLogos = [];
+        let filteredLogos = [];
+        let displayedCount = 0;
+        const ITEMS_PER_PAGE = 60;
+        let currentCategory = 'all';
+        let currentCountry = '';
+        let searchQuery = '';
+
+        // Elements
+        const searchInput = document.getElementById('searchInput');
+        const searchClear = document.getElementById('searchClear');
+        const logosContainer = document.getElementById('logosContainer');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const countrySelect = document.getElementById('countrySelect');
+        const toast = document.getElementById('toast');
+
+        // Load data
+        async function loadData() {
+            try {
+                const response = await fetch('logos.json');
+                const data = await response.json();
+                allLogos = data.logos;
+
+                // Update stats
+                document.getElementById('totalLogos').textContent = data.meta.totalLogos.toLocaleString();
+                document.getElementById('countAll').textContent = data.meta.totalLogos.toLocaleString();
+                document.getElementById('countCountries').textContent = data.categories.find(c => c.id === 'countries')?.count.toLocaleString() || '0';
+                document.getElementById('countMisc').textContent = data.categories.find(c => c.id === 'misc')?.count.toLocaleString() || '0';
+
+                // Get unique countries/subcategories
+                const countries = [...new Set(allLogos.filter(l => l.category === 'countries').map(l => l.subcategory))].sort();
+                document.getElementById('totalCountries').textContent = countries.length;
+
+                // Populate country select
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    option.textContent = formatCountryName(country);
+                    countrySelect.appendChild(option);
+                });
+
+                // Initial render
+                filterAndRender();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                logosContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h2 class="empty-title">Failed to load logos</h2>
+                        <p class="empty-description">Please make sure logos.json is in the same directory.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Format country name
+        function formatCountryName(name) {
+            if (!name) return '';
+            return name.split('-').map(word =>
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        // Filter logos
+        function filterLogos() {
+            let result = [...allLogos];
+
+            // Category filter
+            if (currentCategory !== 'all') {
+                result = result.filter(l => l.category === currentCategory);
+            }
+
+            // Country filter
+            if (currentCountry) {
+                result = result.filter(l => l.subcategory === currentCountry);
+            }
+
+            // Search filter
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                result = result.filter(l =>
+                    l.name.toLowerCase().includes(query) ||
+                    l.id.toLowerCase().includes(query) ||
+                    (l.subcategory && l.subcategory.toLowerCase().includes(query))
+                );
+            }
+
+            return result;
+        }
+
+        // Render logos
+        function renderLogos(logos, append = false) {
+            if (!append) {
+                logosContainer.innerHTML = '';
+                displayedCount = 0;
+            }
+
+            if (logos.length === 0 && displayedCount === 0) {
+                logosContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <h2 class="empty-title">No logos found</h2>
+                        <p class="empty-description">Try a different search term or filter.</p>
+                    </div>
+                `;
+                loadMoreContainer.style.display = 'none';
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            const grid = append ? logosContainer.querySelector('.logos-grid') : document.createElement('div');
+
+            if (!append) {
+                grid.className = 'logos-grid';
+            }
+
+            const startIndex = displayedCount;
+            const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, logos.length);
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const logo = logos[i];
+                const card = createLogoCard(logo);
+                grid.appendChild(card);
+            }
+
+            if (!append) {
+                fragment.appendChild(grid);
+                logosContainer.appendChild(fragment);
+            }
+
+            displayedCount = endIndex;
+
+            // Update counts
+            document.getElementById('showingCount').textContent = displayedCount.toLocaleString();
+            document.getElementById('filteredCount').textContent = logos.length.toLocaleString();
+
+            // Show/hide load more button
+            loadMoreContainer.style.display = displayedCount < logos.length ? 'flex' : 'none';
+        }
+
+        // Create logo card
+        function createLogoCard(logo) {
+            const card = document.createElement('div');
+            card.className = 'logo-card';
+            const imageUrl = BASE_URL + logo.url;
+            const fullUrl = BASE_URL + logo.url;
+
+            card.innerHTML = `
+                <div class="logo-image-container">
+                    <img 
+                        class="logo-image" 
+                        src="${imageUrl}" 
+                        alt="${logo.name}"
+                        loading="lazy"
+                    >
+                </div>
+                <div class="logo-name">${logo.name}</div>
+                <div class="logo-category">${formatCountryName(logo.subcategory) || logo.category}</div>
+                <div class="copy-overlay">
+                    <span class="copy-icon">📋</span>
+                    <span class="copy-text">Click to copy URL</span>
+                </div>
+            `;
+
+            // Handle image error - hide broken image
+            const img = card.querySelector('.logo-image');
+            img.onerror = function () {
+                this.style.display = 'none';
+            };
+
+            card.addEventListener('click', () => copyToClipboard(fullUrl, card));
+            return card;
+        }
+
+        // Copy to clipboard
+        async function copyToClipboard(text, card) {
+            try {
+                await navigator.clipboard.writeText(text);
+
+                // Show overlay feedback
+                const overlay = card.querySelector('.copy-overlay');
+                overlay.classList.add('copied-overlay');
+                overlay.innerHTML = '<span class="copy-icon">✓</span><span class="copy-text">Copied!</span>';
+
+                // Show toast
+                showToast();
+
+                // Reset after delay
+                setTimeout(() => {
+                    overlay.classList.remove('copied-overlay');
+                    overlay.innerHTML = '<span class="copy-icon">📋</span><span class="copy-text">Click to copy URL</span>';
+                }, 1500);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+            }
+        }
+
+        // Show toast
+        function showToast() {
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Filter and render
+        function filterAndRender() {
+            filteredLogos = filterLogos();
+            renderLogos(filteredLogos);
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim();
+            searchClear.classList.toggle('visible', searchQuery.length > 0);
+            filterAndRender();
+        });
+
+        searchClear.addEventListener('click', () => {
+            searchInput.value = '';
+            searchQuery = '';
+            searchClear.classList.remove('visible');
+            filterAndRender();
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+
+                // Reset country filter if switching away from countries
+                if (currentCategory !== 'countries' && currentCategory !== 'all') {
+                    countrySelect.value = '';
+                    currentCountry = '';
+                }
+
+                filterAndRender();
+            });
+        });
+
+        countrySelect.addEventListener('change', (e) => {
+            currentCountry = e.target.value;
+            if (currentCountry) {
+                // Switch to countries view if a country is selected
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-category="countries"]').classList.add('active');
+                currentCategory = 'countries';
+            }
+            filterAndRender();
+        });
+
+        loadMoreBtn.addEventListener('click', () => {
+            renderLogos(filteredLogos, true);
+        });
+
+        // Keyboard shortcut
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            if (e.key === 'Escape') {
+                searchInput.blur();
+            }
+        });
+
+        // Initialize
+        loadData();
+    </script>
+</body>
+
+</html>
